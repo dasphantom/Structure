@@ -58,7 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Task task = mTasksList.get(position);
 
         holder.title.setText(task.getmTitle());
-        holder.last_date.setText(task.getmLast_date().toString());
+        holder.last_date.setText(task.getStringmLast_date());
 
 
 

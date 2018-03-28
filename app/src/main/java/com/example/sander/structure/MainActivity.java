@@ -1,12 +1,17 @@
 package com.example.sander.structure;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,10 +38,15 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        List<Task> myDataset = new ArrayList<>();
+        final List<Task> myDataset = new ArrayList<>();
 
-        myDataset.add(new Task("Kookwas", new Date().toString()));
-        myDataset.add(new Task("Vaatwasser", new Date().toString()));
+
+
+        myDataset.add(new Task("Kookwas", new Date()));
+
+        myDataset.add(new Task("Vaatwasser", new Date()));
+
+
 
 
         //add divider
@@ -48,6 +58,23 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new MyAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
 
+        // row click listener
+        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Task task = myDataset.get(position);
+                //view.setBackgroundColor(Color.GREEN);
+                //Toast.makeText(getApplicationContext(), task.getmTitle() + " is selected!", Toast.LENGTH_SHORT).show();
+
+
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
     }
 }
