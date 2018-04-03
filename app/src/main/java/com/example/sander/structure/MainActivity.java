@@ -1,8 +1,11 @@
 package com.example.sander.structure;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,15 +41,17 @@ public class MainActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        final List<Task> myDataset = new ArrayList<>();
 
 
+        // add two example tasks to db
 
-        myDataset.add(new Task("Kookwas", new Date()));
+        DBHelper dbhelper = new DBHelper(this.getApplicationContext());
 
-        myDataset.add(new Task("Vaatwasser", new Date()));
+        dbhelper.insertTask("Kookwas", new Date().toString());
+        dbhelper.insertTask("Vaatwasser", new Date().toString());
 
-
+        //get two example tasks
+        final List<Task> myDataset = dbhelper.getTasks();
 
 
         //add divider
@@ -75,6 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }));
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
     }
 }

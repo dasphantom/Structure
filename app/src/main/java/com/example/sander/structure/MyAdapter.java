@@ -1,5 +1,7 @@
 package com.example.sander.structure;
 
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,7 +60,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Task task = mTasksList.get(position);
 
         holder.title.setText(task.getmTitle());
-        holder.last_date.setText(task.getStringmLast_date());
+        holder.last_date.setText(task.getmLast_date());
 
 
 
@@ -68,5 +70,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return mTasksList.size();
+
     }
+
+
+
 }
