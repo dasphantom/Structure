@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -26,8 +27,9 @@ public class AddTask extends AppCompatActivity {
             public void onClick(View view) {
                 //get text from title
                 EditText title = findViewById(R.id.add_title);
-                dbhelper.insertTask(title.getText().toString(), new Date().toString());
 
+                dbhelper.insertTask(title.getText().toString(),
+                        new Timestamp(System.currentTimeMillis()).getTime());
 
 
                 finish();

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -60,7 +61,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Task task = mTasksList.get(position);
 
         holder.title.setText(task.getmTitle());
-        holder.last_date.setText(task.getmLast_date());
+
+        //before we set the lastdate we want to calc difference between now and then
+        long currtime = new Timestamp(System.currentTimeMillis()).getTime();
+        long dif =  currtime - task.getmLast_date();
+        long diffDays = dif / (24 * 60 * 60 * 1000);
+
+
+
+        holder.last_date.setText("Days passed:" + String.valueOf(diffDays));
 
 
 

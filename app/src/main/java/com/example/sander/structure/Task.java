@@ -5,13 +5,13 @@ import java.util.Date;
 
 public class Task {
     private String mTitle;
-    private String mLast_date;
+    private Long mLast_date;
 
     public Task() {
 
     }
 
-    public Task(String title, String last_date)
+    public Task(String title, Long last_date)
     {
         this.mTitle = title;
         this.mLast_date = last_date;
@@ -21,16 +21,17 @@ public class Task {
         return mTitle;
     }
 
-    public String getmLast_date() {
+    public Long getmLast_date() {
 
         return mLast_date;
     }
 
-    public String getStringmLast_date() {
+    /**public Long getStringmLast_date() {
 
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd/MM/yyyy");
         String stringDate = sdf.format(mLast_date);
 
         return stringDate;
     }
+     */
 }

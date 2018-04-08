@@ -21,7 +21,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table tasks " +
-                        "(id integer primary key, title text,last_date )"
+                        "(id integer primary key, title text,last_date integer )"
         );
 
 
@@ -29,7 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {}
 
-    public void insertTask(String title, String last_date) {
+    public void insertTask(String title, long last_date) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -55,7 +55,9 @@ public class DBHelper extends SQLiteOpenHelper {
             tasks_list.add(
                     new Task(
                             res.getString(res.getColumnIndex("title")),
-                            res.getString(res.getColumnIndex("last_date"))
+
+
+                            res.getLong(res.getColumnIndex("last_date"))
                     )
             );
 
