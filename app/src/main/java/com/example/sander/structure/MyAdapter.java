@@ -14,20 +14,13 @@ import java.sql.Timestamp;
 import java.util.List;
 
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    public List<Task> tasks;
 
-    private List<Task> mTasksList;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        private TextView title, last_date;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView title, last_date;
-
-
-        //this is the constructor for the ViewHolder, it takes in a TextView Object, i want it to take in something else
-        public ViewHolder(View view) {
+        public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             last_date = (TextView) view.findViewById(R.id.last_date);
@@ -35,30 +28,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<Task> taskList) {
-        this.mTasksList = taskList;
+    public MyAdapter(List<Task> tasks) {
+        this.tasks = tasks;
 
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
-        // create a new view
+
         View itemView  = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.tasks_list_row, parent, false);
 
 
-        return new ViewHolder(itemView);
+        return new MyViewHolder(itemView);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        Task task = mTasksList.get(position);
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+
+        Task task = tasks.get(position);
+
 
         holder.title.setText(task.getmTitle());
 
@@ -67,18 +58,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         long dif =  currtime - task.getmLast_date();
         long diffDays = dif / (24 * 60 * 60 * 1000);
 
-
-
-        holder.last_date.setText("Days passed:" + String.valueOf(diffDays));
-
-
+        holder.last_date.setText("Days ago:" + String.valueOf(diffDays));
 
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mTasksList.size();
+        return tasks.size();
 
     }
 

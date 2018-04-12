@@ -8,10 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_PATH = Environment.getExternalStorageDirectory() + "db";
+
     public static final String DATABASE_NAME = "db";
 
 
@@ -21,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table tasks " +
-                        "(id integer primary key, title text,last_date integer )"
+                        "(id integer primary key, title text,last_date integer)"
         );
 
 
@@ -36,9 +37,27 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("title", title);
         contentValues.put("last_date", last_date);
 
+
         db.insert("Tasks", null, contentValues);
 
     }
+
+    public void updateTask() {
+        Long time = new Timestamp(System.currentTimeMillis()).getTime();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("last_date", time);
+
+
+    }
+
+    public void deleteTask(String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("Tasks", "title" + " = ? ",
+                new String[] { (title) });
+    }
+
 
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks_list = new ArrayList<Task>();

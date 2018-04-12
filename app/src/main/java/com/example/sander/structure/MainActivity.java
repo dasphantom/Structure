@@ -2,97 +2,96 @@ package com.example.sander.structure;
 
 import android.content.Intent;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+
 import android.view.View;
 
-import java.util.Date;
+
 import java.util.List;
 
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-
+    private MyAdapter mAdapter;
+    private List<Task> tasks;
+    private DBHelper dbhelper;
+    SwipeController swipeController = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        setDataAdapter();
+        setupRecyclerView();
+    }
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+    private void setDataAdapter() {
 
 
+        dbhelper = new DBHelper(this.getApplicationContext());
+        tasks = dbhelper.getTasks();
+        mAdapter = new MyAdapter(tasks);
+    }
 
-        // add two example tasks to db
+    private void setupRecyclerView() {
 
-        DBHelper dbhelper = new DBHelper(this.getApplicationContext());
+        dbhelper = new DBHelper(this.getApplicationContext());
 
-        //dbhelper.insertTask("Kookwas", new Date().toString());
-        //dbhelper.insertTask("Vaatwasser", new Date().toString());
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(mAdapter);
 
-        //get two example tasks
-        final List<Task> myDataset = dbhelper.getTasks();
-
-
-        //add divider
-
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-
-        //specify adapter
-
-        mAdapter = new MyAdapter(myDataset);
-        mRecyclerView.setAdapter(mAdapter);
-
-        // row click listener
-        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
+        swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
-            public void onClick(View view, int position) {
-                Task task = myDataset.get(position);
-                //view.setBackgroundColor(Color.GREEN);
-                //Toast.makeText(getApplicationContext(), task.getmTitle() + " is selected!", Toast.LENGTH_SHORT).show();
+            public void onRightClicked(int position) {
+
+                Task task = tasks.get(position);
+                dbhelper.deleteTask(task.getmTitle());
+
+
+                mAdapter.tasks.remove(position);
+                mAdapter.notifyItemRemoved(position);
+                mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+
 
 
 
             }
+        });
 
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Create a new intent to open the {@link NumbersActivity}
-                Intent numbersIntent = new Intent(MainActivity.this, AddTask.class);
-                // Start the new activity
-                startActivity(numbersIntent);
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                swipeController.onDraw(c);
             }
         });
 
 
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+
+                Intent addIntent = new Intent(MainActivity.this, AddTask.class);
+                // Start the new activity
+                startActivity(addIntent);
+            }
+        });
     }
 
     @Override
@@ -102,4 +101,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
         startActivity(getIntent());
     }
+
+
+
 }

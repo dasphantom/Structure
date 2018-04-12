@@ -27,9 +27,10 @@ public class AddTask extends AppCompatActivity {
             public void onClick(View view) {
                 //get text from title
                 EditText title = findViewById(R.id.add_title);
+                Long time = new Timestamp(System.currentTimeMillis()).getTime();
 
-                dbhelper.insertTask(title.getText().toString(),
-                        new Timestamp(System.currentTimeMillis()).getTime());
+                dbhelper.insertTask(title.getText().toString(),time);
+
 
 
                 finish();
