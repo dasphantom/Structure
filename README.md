@@ -6,4 +6,8 @@ TODO
 - Tabs based on category
 - Food manager
 - Swipe right = date = curr_date
-- Swip left = date = prev_date
+
+LIMITATIONS
+
+- Deleting a task will remove all tasks with the same name
+
