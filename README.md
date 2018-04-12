@@ -11,3 +11,6 @@ LIMITATIONS
 
 - Deleting a task will remove all tasks with the same name
 
+SOURCES
+
+https://codeburst.io/android-swipe-menu-with-recyclerview-8f28a235ff28
