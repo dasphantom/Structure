@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Structure</string>
+    <string-array name="categories">
+        <item>Chores</item>
+        <item>Health</item>
+
+    </string-array>
 </resources>

@@ -13,7 +13,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 
 import java.util.List;
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         setDataAdapter();
         setupRecyclerView();
@@ -100,6 +107,43 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         finish();
         startActivity(getIntent());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.task_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+
+        TextView label = (TextView) findViewById(R.id.categoryLabel);
+
+        switch (item.getItemId()) {
+            case R.id.chores:
+                dbhelper = new DBHelper(this.getApplicationContext());
+                tasks = dbhelper.getLimitedTasks("Chores");
+                mAdapter = new MyAdapter(tasks);
+
+                label.setText("Chores");
+
+                setupRecyclerView();
+
+                return true;
+
+            case R.id.health:
+
+                return true;
+            case R.id.everything:
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

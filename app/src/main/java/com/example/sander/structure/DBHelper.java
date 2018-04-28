@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
                 "create table tasks " +
-                        "(id integer primary key, title text,last_date integer)"
+                        "(id integer primary key, title text,last_date integer, category text)"
         );
 
 
@@ -30,12 +30,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {}
 
-    public void insertTask(String title, long last_date) {
+    public void insertTask(String title, long last_date, String category) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("title", title);
         contentValues.put("last_date", last_date);
+        contentValues.put("category", category);
 
 
         db.insert("Tasks", null, contentValues);
@@ -62,9 +63,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks_list = new ArrayList<Task>();
 
+
+
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor res =  db.rawQuery( "select * from tasks", null );
+        Cursor res =  db.rawQuery( "select * from tasks", null);
 
         res.moveToFirst();
 
@@ -75,8 +78,39 @@ public class DBHelper extends SQLiteOpenHelper {
                     new Task(
                             res.getString(res.getColumnIndex("title")),
 
+                            res.getLong(res.getColumnIndex("last_date")),
 
-                            res.getLong(res.getColumnIndex("last_date"))
+                            res.getString(res.getColumnIndex("category"))
+                    )
+            );
+
+
+            res.moveToNext();
+        }
+        return tasks_list;
+    }
+
+    public ArrayList<Task> getLimitedTasks(String category) {
+        ArrayList<Task> tasks_list = new ArrayList<Task>();
+
+        String [] category_array = new String [] {category};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor res =  db.rawQuery( "select * from tasks where category = ?", category_array );
+
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+            //in this loop we want to use what we get as a string
+
+            tasks_list.add(
+                    new Task(
+                            res.getString(res.getColumnIndex("title")),
+
+                            res.getLong(res.getColumnIndex("last_date")),
+
+                            res.getString(res.getColumnIndex("category"))
                     )
             );
 
